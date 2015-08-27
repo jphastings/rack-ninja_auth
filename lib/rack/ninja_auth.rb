@@ -9,6 +9,7 @@ module Rack
         key: 'rack.ninja_auth',
         expire_after: 2592000
 
+      raise "Please set NINJA_GOOGLE_CLIENT_ID and NINJA_GOOGLE_CLIENT_SECRET to use NinjaAuth" unless ENV["NINJA_GOOGLE_CLIENT_ID"] && ENV["NINJA_GOOGLE_CLIENT_SECRET"]
       use OmniAuth::Builder do
         provider :google_oauth2, ENV["NINJA_GOOGLE_CLIENT_ID"], ENV["NINJA_GOOGLE_CLIENT_SECRET"]
       end
@@ -33,8 +34,12 @@ module Rack
           session[:user] = request.env["omniauth.auth"].info.email
           redirect session[:redirect_to]
         else
-          send_file(@not_allowed_file, status: 401)
+          redirect '/unauthorized'
         end
+      end
+
+      get '/unauthorized' do
+        send_file(@not_allowed_file, status: 401)
       end
 
       after do

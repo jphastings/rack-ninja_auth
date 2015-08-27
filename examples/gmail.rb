@@ -1,4 +1,4 @@
-$: << '../lib'
+$LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
 # Make sure you run this with the appropriate environment variables set:
 #
 # ```
