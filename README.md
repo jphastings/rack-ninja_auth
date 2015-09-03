@@ -4,7 +4,7 @@ Require authentication via google for your application without passing any auth 
 
 ## Example
 
-Add this as middleware to your rack application, then execute with `NINJA_GOOGLE_CLIENT_ID` and `NINJA_GOOGLE_CLIENT_SECRET` environment variables set.
+Add this as middleware to your rack application, then execute with `NINJA_GOOGLE_CLIENT_ID`, `NINJA_GOOGLE_CLIENT_SECRET` and `NINJA_REDIS_URL` environment variables set.
 
 ```ruby
 require 'sinatra'
