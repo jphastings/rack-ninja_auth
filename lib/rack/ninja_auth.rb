@@ -13,12 +13,12 @@ module Rack
         expire_after: 2592000,
         redis_server: ENV['NINJA_REDIS_URL'] || 'redis://127.0.0.1:6379/0/rack:ninja_auth'
 
-      raise "Please set NINJA_GOOGLE_CLIENT_ID and NINJA_GOOGLE_CLIENT_SECRET to use NinjaAuth" unless ENV["NINJA_GOOGLE_CLIENT_ID"] && ENV["NINJA_GOOGLE_CLIENT_SECRET"]
       use OmniAuth::Builder do
         provider :google_oauth2, ENV["NINJA_GOOGLE_CLIENT_ID"], ENV["NINJA_GOOGLE_CLIENT_SECRET"]
       end
 
       def initialize(app, email_matcher = //, not_allowed_file = nil)
+        puts "Please set NINJA_GOOGLE_CLIENT_ID and NINJA_GOOGLE_CLIENT_SECRET to use NinjaAuth" unless ENV["NINJA_GOOGLE_CLIENT_ID"] && ENV["NINJA_GOOGLE_CLIENT_SECRET"]
         @main_app = app
         @email_matcher = email_matcher
         @not_allowed_file = not_allowed_file || ::File.expand_path('../../../views/401.html', __FILE__)
