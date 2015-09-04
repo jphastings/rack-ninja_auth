@@ -13,9 +13,16 @@ $LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
 require 'sinatra'
 require 'rack/ninja_auth'
 
-use Rack::NinjaAuth::Middleware, email_matcher: /@gmail.com$/
-# use Rack::NinjaAuth::Middleware, /@gmail\./, './file/to/deliver/if/email/does/not/match.html'
+use Rack::NinjaAuth::Middleware, email_matcher: /@gmail.com$/, secured_routes: %r{^/secured}
 
 get '/secured' do
   "You hit the secured app"
+end
+
+get '/secured/extra' do
+  "More from the secured app"
+end
+
+get '/' do
+  "You can get this always"
 end
