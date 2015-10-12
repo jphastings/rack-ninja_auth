@@ -18,7 +18,7 @@ module Rack
       end
 
       def initialize(app, email_matcher: //, secured_routes: //, not_allowed_file: nil)
-        puts "Please set NINJA_GOOGLE_CLIENT_ID and NINJA_GOOGLE_CLIENT_SECRET to use NinjaAuth" unless ENV["NINJA_GOOGLE_CLIENT_ID"] && ENV["NINJA_GOOGLE_CLIENT_SECRET"]
+        $stderr.puts "Please set NINJA_GOOGLE_CLIENT_ID and NINJA_GOOGLE_CLIENT_SECRET to use NinjaAuth" unless ENV["NINJA_GOOGLE_CLIENT_ID"] && ENV["NINJA_GOOGLE_CLIENT_SECRET"]
         @main_app = app
         @email_matcher = email_matcher
         @secured_route_matcher = secured_routes
