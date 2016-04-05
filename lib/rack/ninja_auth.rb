@@ -18,11 +18,10 @@ module Rack
         provider :google_oauth2, ENV["NINJA_GOOGLE_CLIENT_ID"], ENV["NINJA_GOOGLE_CLIENT_SECRET"]
       end
 
-      def initialize(app, email_matcher: //, secured_routes: //, not_allowed_file: nil, remember_original_path: true)
+      def initialize(app, email_matcher: //, secured_routes: //, not_allowed_file: nil)
         $stderr.puts "Please set NINJA_GOOGLE_CLIENT_ID and NINJA_GOOGLE_CLIENT_SECRET to use NinjaAuth" unless ENV["NINJA_GOOGLE_CLIENT_ID"] && ENV["NINJA_GOOGLE_CLIENT_SECRET"]
         @main_app = app
         @email_matcher = email_matcher
-        @remember_original_path = remember_original_path
         @secured_route_matcher = secured_routes
         @not_allowed_file = not_allowed_file || ::File.expand_path('../../../views/401.html', __FILE__)
         super()
@@ -39,10 +38,10 @@ module Rack
       end
 
       get '/auth/google_oauth2/callback' do
-        if (request.env["omniauth.auth"].info.email.match(@email_matcher) rescue false)
-          session[:user] = request.env["omniauth.auth"].info.email
-          redirect_url = session[:redirect_to] if @remember_original_path
-          redirect redirect_url || '/'
+        email = request.env["omniauth.auth"].info.email rescue nil
+        if email && email.match(@email_matcher)
+          session[:user] = email
+          redirect '/'
         else
           redirect '/auth/failure'
         end
@@ -55,7 +54,6 @@ module Rack
       after do
         if !@hit_real_app && status == 404
           halt(403) unless env['rack-accept.request'].media_type?('text/html')
-          session[:redirect_to] = env['REQUEST_URI'] if @remember_original_path && is_internal_request?
           redirect '/auth/google_oauth2'
         end
       end
@@ -67,7 +65,7 @@ module Rack
       end
 
       def is_protected_request?
-        is_internal_request? || env['PATH_INFO'].match(@secured_route_matcher)
+        env['PATH_INFO'].match(@secured_route_matcher)
       end
 
       def is_internal_request?

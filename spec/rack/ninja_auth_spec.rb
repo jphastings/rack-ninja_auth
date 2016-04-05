@@ -39,10 +39,10 @@ describe Rack::NinjaAuth::Middleware do
 
       context 'visiting the auth callback' do
         let(:path) { '/auth/google_oauth2/callback' }
-        let(:session) { { redirect_to: 'http://example.org/wherever' } }
+        let(:session) { {} }
 
         its(:status) { should eq 302 }
-        it('should redirect to the page originally visited') { expect(subject.headers['Location']).to eq session[:redirect_to] }
+        it('should redirect to the root') { expect(subject.headers['Location']).to eq "http://example.org/" }
       end
 
       context 'with a validated session' do
