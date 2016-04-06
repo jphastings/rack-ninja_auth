@@ -4,15 +4,16 @@ $LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
 # ```
 # NINJA_GOOGLE_CLIENT_ID=<Your google client id>
 # NINJA_GOOGLE_CLIENT_SECRET=<Your google client secret>
-# ruby gmail.rb
+# ruby routes.rb
 # ```
 #
 # Now you can visit `http://127.0.0.1:4567/secured` and will only access it if you validate with a google
-# account that has an `@gmail.com` email address.
+# account that has an `@gmail.com` email address. `http://127.0.0.1:4567/` be available, even without authenticating.
 
 require 'sinatra'
 require 'rack/ninja_auth'
 
+use Rack::Session::Cookie, secret: 'change_me'
 use Rack::NinjaAuth::Middleware, email_matcher: /@gmail.com$/, secured_routes: %r{^/secured}
 
 get '/secured' do

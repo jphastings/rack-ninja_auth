@@ -21,7 +21,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "sinatra", "~> 1.4"
   spec.add_dependency "omniauth-google-oauth2", "~> 0.2"
-  spec.add_dependency "redis-rack", "~> 1.4"
   spec.add_dependency "rack-accept", "~> 0.4"
 
   spec.add_development_dependency "bundler", "~> 1.10"

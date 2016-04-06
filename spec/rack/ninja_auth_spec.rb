@@ -9,7 +9,7 @@ describe Rack::NinjaAuth::Middleware do
   let(:content) { 'Exciting content!' }
   let(:session) { {} }
   let(:email) { nil }
-  let(:rack_vars) { { :'omniauth.auth' => OmniAuth.config.mock_auth[:google], 'rack.session' => session } }
+  let(:rack_vars) { { :'omniauth.auth' => OmniAuth.config.mock_auth[:google], 'rack.session' => { 'rack-ninja_auth' => session } } }
   let(:base_app) { proc { [200, {}, [content]] } }
   let(:app) { described_class.new(base_app, email_matcher: email_matcher, secured_routes: secured_routes) }
   let(:email_matcher) { %r{@acceptable.com$} }
@@ -46,7 +46,7 @@ describe Rack::NinjaAuth::Middleware do
       end
 
       context 'with a validated session' do
-        let(:session) { { user: email } }
+        let(:session) { { email: email } }
 
         context 'visiting a path that exists in the app' do
           let(:path) { '/path' }
@@ -111,7 +111,7 @@ describe Rack::NinjaAuth::Middleware do
       let(:email) { 'person@acceptable.com' }
 
       context 'with a validated session' do
-        let(:session) { { user: email } }
+        let(:session) { { email: email } }
 
         context 'visiting a secured path' do
           let(:path) { '/secured/path' }
