@@ -51,7 +51,7 @@ module Rack
       after do
         if !@hit_real_app && status == 404
           halt(403) unless env['rack-accept.request'].media_type?('text/html')
-          binding.pry
+          headers['X-Cascade'] = 'stop'
           redirect '/auth/google_oauth2'
         end
       end
