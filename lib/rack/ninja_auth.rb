@@ -58,7 +58,7 @@ module Rack
       private
 
       def authenticate!(email:)
-        session[SESSION_KEY] = { email: email }
+        session[SESSION_KEY] = { 'email' => email }
       end
 
       def allowable_email?(email)
@@ -67,7 +67,7 @@ module Rack
 
       def is_authenticated?
         fields = session[SESSION_KEY] || {}
-        allowable_email?(fields[:email])
+        allowable_email?(fields['email'])
       end
 
       def is_unprotected_request?
